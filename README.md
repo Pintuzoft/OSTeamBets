@@ -1,0 +1,2 @@
+# OSTeamBets
+OldSwedes TeamBets plugin
