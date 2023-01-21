@@ -23,8 +23,9 @@ public Plugin:myinfo = {
 public OnPluginStart() {
     HookEvent ( "round_start", Event_RoundStart );
     HookEvent ( "round_end", Event_RoundEnd );
-    HookEvent ( "say", Event_Say );
-    HookEvent ( "say_team", Event_Say );
+    RegConsoleCmd ( "say", Command_Say );
+    RegConsoleCmd ( "say_team", Command_Say );
+
 }
 
 /* EVENTS */
@@ -62,37 +63,35 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
         bets[player][2] = 0;
     }
 }
-public void Event_Say ( Event event, const char[] name, bool dontBroadcast ) {
-    int userid = event.GetInt ( "userid" );
-    int client = GetClientOfUserId ( userid );
+public Action Command_Say ( int client, int args ) {
     char text[256];
-    event.GetString ( "text", text, sizeof ( text ) );
+    GetCmdArgString ( text, sizeof ( text ) );
 
     char parts[16][32];
     int partCount = ExplodeString ( text, " ", parts, 16, 32 );
 
     if ( partCount != 3 ) {
-        return;
+        return Plugin_Continue;
     }
     if ( StrEqual ( parts[0], "bet", false ) ||
          StrEqual ( parts[0], "!bet", false ) ) {
 
         if ( ! playerIsReal ( client ) ) {
-            return;
+            return Plugin_Continue;
         } else if ( IsPlayerAlive ( client ) ) {
             PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
-            return;
+            return Plugin_Continue;
         } else if ( bets[client][0] != 0 ) {
             PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
-            return;
+            return Plugin_Continue;
         } else if ( ! StrEqual ( parts[1], "T", false ) &&
                     ! StrEqual ( parts[1], "CT", false ) ) {
             PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
-            return;
+            return Plugin_Continue;
         } 
         doBet ( client, parts[1], parts[2] );
     }
-
+    return Plugin_Continue;
 }
 
 /* COMMANDS */
