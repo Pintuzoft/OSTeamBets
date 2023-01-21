@@ -26,7 +26,11 @@ public OnPluginStart ( ) {
 }
 
 public Action OnClientSayCommand ( int client, const char[] command ) {
-    PrintToConsoleAll ( "OnClientSayCommand:0" );
+
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", command );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", command[0] );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", command[1] );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", command[2] );
     if ( StrEqual ( command[0], "bet", false ) ||
          StrEqual ( command[0], "!bet", false ) ) {
 
