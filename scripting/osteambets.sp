@@ -23,7 +23,8 @@ public Plugin:myinfo = {
 public OnPluginStart() {
     HookEvent ( "round_start", Event_RoundStart );
     HookEvent ( "round_end", Event_RoundEnd );
-    RegConsoleCmd("bet", Command_Bet);
+    HookEvent ( "say", Event_Say );
+    HookEvent ( "say_team", Event_Say );
 }
 
 /* EVENTS */
@@ -61,8 +62,95 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
         bets[player][2] = 0;
     }
 }
+public void Event_Say ( Event event, const char[] name, bool dontBroadcast ) {
+    int userid = event.GetInt ( "userid" );
+    int client = GetClientOfUserId ( userid );
+    char text[256];
+    event.GetString ( "text", text, sizeof ( text ) );
+
+    char parts[16][32];
+    int partCount = ExplodeString ( text, " ", parts, 16, 32 );
+
+    if ( partCount != 3 ) {
+        return;
+    }
+    if ( StrEqual ( parts[0], "bet", false ) ||
+         StrEqual ( parts[0], "!bet", false ) ) {
+
+        if ( ! playerIsReal ( client ) ) {
+            return;
+        } else if ( IsPlayerAlive ( client ) ) {
+            PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
+            return;
+        } else if ( bets[client][0] != 0 ) {
+            PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
+            return;
+        } else if ( ! StrEqual ( parts[1], "T", false ) &&
+                    ! StrEqual ( parts[1], "CT", false ) ) {
+            PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
+            return;
+        } 
+        doBet ( client, parts[1], parts[2] );
+    }
+
+}
+
 /* COMMANDS */
-public Action Command_Bet ( int player, int args ) {
+
+/* handle bet from user */
+public void doBet ( int player, char[] betTeam, char[] betAmount ) {
+    if ( ! playerIsReal ( player ) ) {
+        return;
+    }
+
+    setTeamSizes ( );
+    int playerMoney = getPlayerMoney ( player );
+
+    if ( StrEqual ( betTeam, "T", false ) ) {
+        bets[player][0] = 2;
+        bets[player][2] = bets[player][1] * ( aliveCT / aliveT );
+    } else if ( StrEqual ( betTeam, "CT", false ) ) {
+        bets[player][0] = 3;
+        bets[player][2] = bets[player][1] * ( aliveT / aliveCT );
+    } else {
+        PrintToChat ( player, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
+        return;
+    }
+
+
+    if ( isNumeric ( betAmount ) ) {
+        /* Bet amount is a number */
+        int betAmountInt = StringToInt ( betAmount );
+        if ( betAmountInt > playerMoney ) {
+            PrintToChat ( player, "[OSTeamBets]: Amount is more than you have, so betting all." );
+            betAmountInt = playerMoney;
+        }
+        bets[player][1] = betAmountInt;
+        decPlayerMoney ( player, betAmountInt );
+
+    } else {
+        /* Bet amount is a string */
+        if ( StrEqual ( betAmount, "ALL", false ) ) {
+            bets[player][1] = playerMoney;
+            decPlayerMoney ( player, playerMoney );
+
+        } else if ( StrEqual ( betAmount, "HALF", false ) ) {
+            bets[player][1] = playerMoney / 2;
+            decPlayerMoney ( player, bets[player][1] );
+
+        } else if ( StrEqual ( betAmount, "QUARTER", false ) ) {
+            bets[player][1] = playerMoney / 4;
+            decPlayerMoney ( player, bets[player][1] );
+
+        } else {
+            PrintToChat ( player, "[OSTeamBets]: Invalid amount. Please use a number, 'ALL', 'HALF', or 'QUARTER'." );
+            return;
+        }
+    }
+    PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
+}
+/*
+public Action Command_Bet_old ( int player, int args ) {
     char team[8];
     char inAmount[24];
     int playerMoney;
@@ -88,7 +176,6 @@ public Action Command_Bet ( int player, int args ) {
     GetCmdArg ( 2, inAmount, sizeof ( inAmount ) );
 
     if ( isNumeric ( inAmount ) ) {
-        /* Bet amount is a number */
         int betAmount = StringToInt ( inAmount );
         if ( betAmount > playerMoney ) {
             PrintToChat ( player, "[OSTeamBets]: You don't have enough money to bet that much." );
@@ -98,7 +185,6 @@ public Action Command_Bet ( int player, int args ) {
         incPlayerMoney ( player, betAmount );
 
     } else {
-        /* Bet amount is a string */
         if ( StrEqual ( inAmount, "ALL", false ) ) {
             bets[player][1] = playerMoney;
             incPlayerMoney ( player, playerMoney );
@@ -134,6 +220,7 @@ public Action Command_Bet ( int player, int args ) {
     
     return Plugin_Handled;
 }
+*/
 
 public int getPlayerMoney ( int player ) {
     return GetEntProp ( player, Prop_Send, "m_iAccount" );
@@ -169,7 +256,7 @@ public void setTeamSizes ( ) {
     }
 }
 
-public bool isNumeric ( char str[24] ) {
+public bool isNumeric ( char[] str ) {
     int len = strlen ( str );
     for ( int i = 0; i < len; i++ ) {
         if ( str[i] < '0' || str[i] > '9' ) {
