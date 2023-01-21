@@ -26,12 +26,12 @@ public OnPluginStart ( ) {
 }
 
 public Action OnClientSayCommand ( int client, const char[] command, const char[] sArgs ) {
-    //char parts[16][32];
-    //int partCount = ExplodeString ( sArgs, " ", parts, 16, 32 );
+    char parts[16][32];
+    int partCount = ExplodeString ( sArgs, " ", parts, 16, 32 );
     PrintToConsoleAll ( "OnClientSayCommand:0:%s", command );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", sArgs[0] );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", sArgs[1] );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", sArgs[2] );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[0] );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[1] );
+    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[2] );
     if ( StrEqual ( command[0], "bet", false ) ||
          StrEqual ( command[0], "!bet", false ) ) {
 
