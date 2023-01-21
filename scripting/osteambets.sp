@@ -20,12 +20,33 @@ public Plugin:myinfo = {
     url = "https://github.com/Pintuzoft/OSTeamBets"
 };
 
-public OnPluginStart() {
+public OnPluginStart ( ) {
     HookEvent ( "round_start", Event_RoundStart );
     HookEvent ( "round_end", Event_RoundEnd );
-    RegConsoleCmd ( "say", Command_Say );
-    RegConsoleCmd ( "say_team", Command_Say );
+}
 
+public Action OnClientSayCommand ( int client, const char[] command ) {
+    if ( StrEqual ( command[0], "bet", false ) ||
+         StrEqual ( command[0], "!bet", false ) ) {
+
+        if ( ! playerIsReal ( client ) ) {
+            return Plugin_Continue;
+        } else if ( IsPlayerAlive ( client ) ) {
+            PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
+            return Plugin_Continue;
+        } else if ( bets[client][0] != 0 ) {
+            PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
+            return Plugin_Continue;
+        } else if ( ! StrEqual ( command[1], "T", false ) &&
+                    ! StrEqual ( command[1], "CT", false ) ) {
+            PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
+            return Plugin_Continue;
+        }
+
+
+        return Plugin_Handled;
+    }
+    return Plugin_Continue;
 }
 
 /* EVENTS */
@@ -63,7 +84,7 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
         bets[player][2] = 0;
     }
 }
-public Action Command_Say ( int client, int args ) {
+/*public void Command_Say ( int client, int args ) {
     char text[256];
     GetCmdArgString ( text, sizeof ( text ) );
 
@@ -71,13 +92,13 @@ public Action Command_Say ( int client, int args ) {
     int partCount = ExplodeString ( text, " ", parts, 16, 32 );
 
     if ( partCount != 3 ) {
-        return Plugin_Continue;
+        return;
     }
     if ( StrEqual ( parts[0], "bet", false ) ||
          StrEqual ( parts[0], "!bet", false ) ) {
 
         if ( ! playerIsReal ( client ) ) {
-            return Plugin_Continue;
+            return ;
         } else if ( IsPlayerAlive ( client ) ) {
             PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
             return Plugin_Continue;
@@ -92,15 +113,17 @@ public Action Command_Say ( int client, int args ) {
         doBet ( client, parts[1], parts[2] );
     }
     return Plugin_Continue;
-}
+}*/
 
 /* COMMANDS */
 
 /* handle bet from user */
-public void doBet ( int player, char[] betTeam, char[] betAmount ) {
+/*public void doBet ( int player, const char[] command ) {
     if ( ! playerIsReal ( player ) ) {
         return;
     }
+    char betTeam[32] = command[1];
+    char betAmount[32] = command[2];
 
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
@@ -118,7 +141,6 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
 
 
     if ( isNumeric ( betAmount ) ) {
-        /* Bet amount is a number */
         int betAmountInt = StringToInt ( betAmount );
         if ( betAmountInt > playerMoney ) {
             PrintToChat ( player, "[OSTeamBets]: Amount is more than you have, so betting all." );
@@ -128,7 +150,6 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
         decPlayerMoney ( player, betAmountInt );
 
     } else {
-        /* Bet amount is a string */
         if ( StrEqual ( betAmount, "ALL", false ) ) {
             bets[player][1] = playerMoney;
             decPlayerMoney ( player, playerMoney );
@@ -148,7 +169,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
     }
     PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
 }
-/*
+
 public Action Command_Bet_old ( int player, int args ) {
     char team[8];
     char inAmount[24];
