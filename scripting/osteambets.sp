@@ -26,39 +26,29 @@ public OnPluginStart ( ) {
 }
 
 public Action OnClientSayCommand ( int client, const char[] command, const char[] sArgs ) {
-    char parts[16][32];
-    int partCount = ExplodeString ( sArgs, " ", parts, 16, 32 );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", command );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[0] );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[1] );
-    PrintToConsoleAll ( "OnClientSayCommand:0:%s", parts[2] );
-    if ( StrEqual ( command[0], "bet", false ) ||
-         StrEqual ( command[0], "!bet", false ) ) {
+    char cmd[16][32];
+    int partCount = ExplodeString ( sArgs, " ", cmd, 16, 32 );
+     
+    if ( StrEqual ( cmd[0], "bet", false ) ||
+         StrEqual ( cmd[0], "!bet", false ) ) {
 
-    PrintToConsoleAll ( "OnClientSayCommand:1" );
         if ( ! playerIsReal ( client ) ) {
-    PrintToConsoleAll ( "OnClientSayCommand:2" );
             return Plugin_Continue;
         } else if ( IsPlayerAlive ( client ) ) {
-    PrintToConsoleAll ( "OnClientSayCommand:3" );
             PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
             return Plugin_Continue;
         } else if ( bets[client][0] != 0 ) {
-    PrintToConsoleAll ( "OnClientSayCommand:4" );
             PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
             return Plugin_Continue;
-        } else if ( ! StrEqual ( command[1], "T", false ) &&
-                    ! StrEqual ( command[1], "CT", false ) ) {
-    PrintToConsoleAll ( "OnClientSayCommand:5" );
+        } else if ( ! StrEqual ( cmd[1], "T", false ) &&
+                    ! StrEqual ( cmd[1], "CT", false ) ) {
             PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
             return Plugin_Continue;
-        }
-    PrintToConsoleAll ( "OnClientSayCommand:6" );
+        } 
 
-
+        doBet ( client, cmd[1], cmd[2] );
         return Plugin_Handled;
     }
-    PrintToConsoleAll ( "OnClientSayCommand:7" );
     return Plugin_Continue;
 }
 
@@ -131,13 +121,11 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
 /* COMMANDS */
 
 /* handle bet from user */
-/*public void doBet ( int player, const char[] command ) {
+public void doBet ( int player, char[] betTeam, char[] betAmount ) {
     if ( ! playerIsReal ( player ) ) {
         return;
     }
-    char betTeam[32] = command[1];
-    char betAmount[32] = command[2];
-
+     
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
 
@@ -182,7 +170,7 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
     }
     PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
 }
-
+/*
 public Action Command_Bet_old ( int player, int args ) {
     char team[8];
     char inAmount[24];
