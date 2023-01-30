@@ -177,7 +177,7 @@ public void setTeamSizes ( ) {
     aliveT = 0;
     aliveCT = 0;
     for ( int player = 1; player <= MaxClients; player++ ) {
-        if ( playerIsReal ( player ) && IsPlayerAlive ( player ) ) {
+        if ( IsPlayerAlive ( player ) ) {
             if ( GetClientTeam ( player ) == 2 ) {
                 aliveT++;
             } else {
