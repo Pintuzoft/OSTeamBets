@@ -77,7 +77,9 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
         if ( playerIsReal ( player ) && bets[player][0] != 0 ) {
             if ( bets[player][0] == winner ) {
                 /* WON */
+                int winnings = bets[player][1] + bets[player][2];
                 PrintToChat ( player, "[OSTeamBets]: You have won $%d on your $%d bet!", bets[player][2], bets[player][1] );
+                PrintToChat ( player, " \x04+$%d\x01: Your winnings.", winnings );
                 incPlayerMoney ( player, bets[player][2] );
             
             } else {
@@ -132,28 +134,18 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             return;
         }
     }
-    int winnings = 0;
-    PrintToConsoleAll ( "bets[player][1]: %s", bets[player][1] );
-    PrintToConsoleAll ( "aliveT: %d", aliveT );
-    PrintToConsoleAll ( "aliveCT: %d", aliveCT );
-
+  
     if ( StrEqual ( betTeam, "T", false ) ) {
         bets[player][0] = 2;
-        winnings = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
+        bets[player][2] = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
     } else if ( StrEqual ( betTeam, "CT", false ) ) {
         bets[player][0] = 3;
-        winnings = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
+        bets[player][2] = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
     } 
-    PrintToConsoleAll ( "winnings: %d", winnings );
-    bets[player][2] = winnings;
-    PrintToConsoleAll ( "bets[player][0]: %d", bets[player][0] );
-    PrintToConsoleAll ( "bets[player][1]: %d", bets[player][1] );
-    PrintToConsoleAll ( "bets[player][2]: %d", bets[player][2] );
     PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
 }
 
 public int getPlayerMoney ( int player ) {
-
     return GetEntProp ( player, Prop_Send, "m_iAccount" );
 }
 
