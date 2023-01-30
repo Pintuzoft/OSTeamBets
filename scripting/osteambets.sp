@@ -79,7 +79,7 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
                 /* WON */
                 int winnings = bets[player][1] + bets[player][2];
                 PrintToChat ( player, "[OSTeamBets]: You have won $%d on your $%d bet!", bets[player][2], bets[player][1] );
-                PrintToChat ( player, " \x05+$%d\x01: Your winnings.", winnings );
+                PrintToChat ( player, " \x06+$%d\x01: Your winnings.", winnings );
                 incPlayerMoney ( player, bets[player][2] );
             
             } else {
