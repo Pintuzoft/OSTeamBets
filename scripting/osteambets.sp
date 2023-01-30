@@ -134,10 +134,10 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
     }
     if ( StrEqual ( betTeam, "T", false ) ) {
         bets[player][0] = 2;
-        bets[player][2] = bets[player][1] * ( aliveCT / aliveT );
+        bets[player][2] = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
     } else if ( StrEqual ( betTeam, "CT", false ) ) {
         bets[player][0] = 3;
-        bets[player][2] = bets[player][1] * ( aliveT / aliveCT );
+        bets[player][2] = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
     } 
 
 
