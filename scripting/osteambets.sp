@@ -50,7 +50,8 @@ public Action OnClientSayCommand ( int client, const char[] command, const char[
             PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
             return Plugin_Continue;
         } 
-
+        PrintToConsoleAll ( "cmd[1]: %s", cmd[1] );
+        PrintToConsoleAll ( "cmd[2]: %s", cmd[2] );
         doBet ( client, cmd[1], cmd[2] );
         return Plugin_Handled;
     }
@@ -139,6 +140,9 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             return;
         }
     }
+    PrintToConsoleAll ( "bets[player][0]: %d", bets[player][0] );
+    PrintToConsoleAll ( "bets[player][1]: %d", bets[player][1] );
+    PrintToConsoleAll ( "bets[player][2]: %d", bets[player][2] );
     PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
 }
 
