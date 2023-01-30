@@ -103,7 +103,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
      
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
-    PrintToConsoleAll ( "playerMoney: %d", playerMoney );
+    PrintToConsoleAll ( "betAmount: %s", betAmount );
     if ( isNumeric ( betAmount ) ) {
         int betAmountInt = StringToInt ( betAmount );
         if ( betAmountInt > playerMoney ) {
