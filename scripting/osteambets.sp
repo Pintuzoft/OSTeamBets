@@ -2,15 +2,14 @@
 #include <sdktools>
 #include <cstrike>
 
+/*
+    bets[player][0] = Team
+    bets[player][1] = Amount
+    bets[player][2] = winnings
+*/
 int bets[MAXPLAYERS+1][3];
 int aliveT = 0;
 int aliveCT = 0;
-
-/*
-    [player][0] = Team
-    [player][1] = Amount
-    [player][2] = winnings
-*/
 
 public Plugin:myinfo = {
     name = "OSTeamBets",
