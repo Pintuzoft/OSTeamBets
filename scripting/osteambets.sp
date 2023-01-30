@@ -79,7 +79,7 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
                 /* WON */
                 int winnings = bets[player][1] + bets[player][2];
                 PrintToChat ( player, "[OSTeamBets]: You have won $%d on your $%d bet!", bets[player][2], bets[player][1] );
-                PrintToChat ( player, " \x04+$%d\x01: Your winnings.", winnings );
+                PrintToChat ( player, " \x05+$%d\x01: Your winnings.", winnings );
                 incPlayerMoney ( player, bets[player][2] );
             
             } else {
@@ -107,14 +107,12 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
     int playerMoney = getPlayerMoney ( player );
     if ( isNumeric ( betAmount ) ) {
         int betAmountInt = StringToInt ( betAmount );
-        PrintToConsoleAll ( "betAmountInt: %d", betAmountInt );
-
         if ( betAmountInt > playerMoney ) {
             PrintToChat ( player, "[OSTeamBets]: Amount is more than you have, so betting all." );
             betAmountInt = playerMoney;
         }
         bets[player][1] = betAmountInt;
-        PrintToChat ( player, " \x04-$%d\x01: Your bet.", betAmountInt );
+        PrintToChat ( player, " \x07-$%d\x01: Your bet is in.", betAmountInt );
         decPlayerMoney ( player, betAmountInt );
 
     } else {
@@ -128,7 +126,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             PrintToChat ( player, "[OSTeamBets]: Invalid amount. Please use a number, 'ALL', 'HALF', or 'QUARTER'." );
             return;
         }
-        PrintToChat ( player, " \x02-$%d\x01: Your bet is in.", bets[player][1] );
+        PrintToChat ( player, " \x07-$%d\x01: Your bet is in.", bets[player][1] );
         decPlayerMoney ( player, bets[player][1] );
     }
   
