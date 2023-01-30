@@ -132,15 +132,16 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             return;
         }
     }
+    int winnings = 0;
     if ( StrEqual ( betTeam, "T", false ) ) {
         bets[player][0] = 2;
-        bets[player][2] = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
+        winnings = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
     } else if ( StrEqual ( betTeam, "CT", false ) ) {
         bets[player][0] = 3;
-        bets[player][2] = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
+        winnings = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
     } 
-
-
+    PrintToConsoleAll ( "winnings: %d", winnings );
+    bets[player][2] = winnings;
     PrintToConsoleAll ( "bets[player][0]: %d", bets[player][0] );
     PrintToConsoleAll ( "bets[player][1]: %d", bets[player][1] );
     PrintToConsoleAll ( "bets[player][2]: %d", bets[player][2] );
