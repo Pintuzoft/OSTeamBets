@@ -126,10 +126,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             PrintToChat ( player, "[OSTeamBets]: Invalid amount. Please use a number, 'ALL', 'HALF', or 'QUARTER'." );
             return;
         }
-        PrintToChat ( player, " \x07-$%d\x01: Your bet is in.", bets[player][1] );
-        decPlayerMoney ( player, bets[player][1] );
     }
-  
     if ( StrEqual ( betTeam, "T", false ) ) {
         bets[player][0] = 2;
         bets[player][2] = RoundToNearest ( float(bets[player][1]) * ( float(aliveCT) / float(aliveT) ) );
@@ -138,6 +135,8 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
         bets[player][2] = RoundToNearest( float(bets[player][1]) * ( float(aliveT) / float(aliveCT) ) );
     } 
     PrintToChat ( player, "[OSTeamBets]: You have bet $%d on the %s team with the chance of winning: $%d.", bets[player][1], betTeam, bets[player][2] );
+    PrintToChat ( player, " \x07-$%d\x01: Your bet is in.", bets[player][1] );
+    decPlayerMoney ( player, bets[player][1] );
 }
 
 public int getPlayerMoney ( int player ) {
