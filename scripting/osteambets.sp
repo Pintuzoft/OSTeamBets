@@ -95,7 +95,7 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
 }
 
 
-/* COMMANDS */
+/* METHODS */
 
 /* handle bet from user */
 public void doBet ( int player, char[] betTeam, char[] betAmount ) {
