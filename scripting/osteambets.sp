@@ -112,8 +112,6 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             betAmountInt = playerMoney;
         }
         bets[player][1] = betAmountInt;
-        PrintToChat ( player, " \x07-$%d\x01: Your bet is in.", betAmountInt );
-        decPlayerMoney ( player, betAmountInt );
 
     } else {
         if ( StrEqual ( betAmount, "ALL", false ) ) {
@@ -124,6 +122,9 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             bets[player][1] = playerMoney / 4;
         } else {
             PrintToChat ( player, "[OSTeamBets]: Invalid amount. Please use a number, 'ALL', 'HALF', or 'QUARTER'." );
+            bets[player][0] = 0;
+            bets[player][1] = 0;
+            bets[player][2] = 0;
             return;
         }
     }
