@@ -50,8 +50,6 @@ public Action OnClientSayCommand ( int client, const char[] command, const char[
             PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
             return Plugin_Continue;
         } 
-        PrintToConsoleAll ( "cmd[1]: %s", cmd[1] );
-        PrintToConsoleAll ( "cmd[2]: %s", cmd[2] );
         doBet ( client, cmd[1], cmd[2] );
         return Plugin_Handled;
     }
