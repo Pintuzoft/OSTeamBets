@@ -103,7 +103,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
      
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
-
+    PrintToConsoleAll ( "playerMoney: %d", playerMoney );
     if ( isNumeric ( betAmount ) ) {
         int betAmountInt = StringToInt ( betAmount );
         if ( betAmountInt > playerMoney ) {
@@ -147,6 +147,7 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
 }
 
 public int getPlayerMoney ( int player ) {
+
     return GetEntProp ( player, Prop_Send, "m_iAccount" );
 }
 
