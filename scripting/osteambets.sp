@@ -104,15 +104,6 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
 
-    if ( StrEqual ( betTeam, "T", false ) ) {
-        bets[player][0] = 2;
-        bets[player][2] = bets[player][1] * ( aliveCT / aliveT );
-    } else if ( StrEqual ( betTeam, "CT", false ) ) {
-        bets[player][0] = 3;
-        bets[player][2] = bets[player][1] * ( aliveT / aliveCT );
-    } 
-
-
     if ( isNumeric ( betAmount ) ) {
         int betAmountInt = StringToInt ( betAmount );
         if ( betAmountInt > playerMoney ) {
@@ -140,6 +131,15 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
             return;
         }
     }
+    if ( StrEqual ( betTeam, "T", false ) ) {
+        bets[player][0] = 2;
+        bets[player][2] = bets[player][1] * ( aliveCT / aliveT );
+    } else if ( StrEqual ( betTeam, "CT", false ) ) {
+        bets[player][0] = 3;
+        bets[player][2] = bets[player][1] * ( aliveT / aliveCT );
+    } 
+
+
     PrintToConsoleAll ( "bets[player][0]: %d", bets[player][0] );
     PrintToConsoleAll ( "bets[player][1]: %d", bets[player][1] );
     PrintToConsoleAll ( "bets[player][2]: %d", bets[player][2] );
