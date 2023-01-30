@@ -176,8 +176,8 @@ public void incPlayerMoney ( int player, int amount ) {
 public void setTeamSizes ( ) {
     aliveT = 0;
     aliveCT = 0;
-    for ( int player = 1; player <= MaxClients; player++ ) {
-        if ( IsPlayerAlive ( player ) ) {
+    for ( int player = 1; player <= MaxClients; player++ ) { 
+        if ( playerIsAlive ( player ) ) {
             if ( GetClientTeam ( player ) == 2 ) {
                 aliveT++;
             } else {
@@ -197,6 +197,14 @@ public bool isNumeric ( char[] str ) {
     return true;
 }
 
+public bool playerIsAlive ( int player ) {
+    if ( IsClientInGame ( player ) ) {
+        if ( IsPlayerAlive ( player ) ) {
+            return true;
+        }
+    }
+    return false;
+}
 public bool playerIsReal ( client ) {
     if ( ! IsClientInGame ( client ) ) {
         return false;
