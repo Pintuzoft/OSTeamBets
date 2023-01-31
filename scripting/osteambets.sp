@@ -77,12 +77,11 @@ public void Event_RoundEnd ( Event event, const char[] name, bool dontBroadcast 
                 int winnings = bets[player][1] + bets[player][2];
                 PrintToChat ( player, "[OSTeamBets]: You have won $%d on your $%d bet!", bets[player][2], bets[player][1] );
                 PrintToChat ( player, " \x06+$%d\x01: Your winnings.", winnings );
-                incPlayerMoney ( player, bets[player][2] );
+                incPlayerMoney ( player, winnings );
             
             } else {
                 /* LOST */
                 PrintToChat ( player, "[OSTeamBets]: You have lost your $%d bet!", bets[player][1] );
-                decPlayerMoney ( player, bets[player][1] );
             }
             bets[player][0] = 0;
             bets[player][1] = 0;
@@ -102,6 +101,10 @@ public void doBet ( int player, char[] betTeam, char[] betAmount ) {
      
     setTeamSizes ( );
     int playerMoney = getPlayerMoney ( player );
+    if ( playerMoney == 0 ) {
+        PrintToChat ( player, "[OSTeamBets]: You don't have any money to bet." );
+        return;
+    }
     if ( isNumeric ( betAmount ) ) {
         int betAmountInt = StringToInt ( betAmount );
         if ( betAmountInt > playerMoney ) {
