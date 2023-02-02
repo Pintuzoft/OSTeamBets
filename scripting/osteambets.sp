@@ -33,6 +33,10 @@ public Action OnClientSayCommand ( int client, const char[] command, const char[
         return Plugin_Continue;
     }
 
+    PrintToConsoleAll ( "cmd[0]: %s", cmd[0] );
+    PrintToConsoleAll ( "cmd[1]: %s", cmd[1] );
+    PrintToConsoleAll ( "cmd[2]: %s", cmd[2] );
+
     if ( ! StrEqual ( cmd[0], "bet", false ) ||
          ! StrEqual ( cmd[0], "!bet", false ) ) {
         return Plugin_Continue;
