@@ -31,8 +31,7 @@ public Action OnClientSayCommand ( int client, const char[] command, const char[
     if ( ! playerIsReal ( client ) ) {
         return Plugin_Continue;
 
-    } else if ( ! StrEqual ( cmd[0], "bet", false ) ||
-         ! StrEqual ( cmd[0], "!bet", false ) ) {
+    } else if ( ! StrEqual ( cmd[0], "bet", false ) && ! StrEqual ( cmd[0], "!bet", false ) ) {
         return Plugin_Continue;
 
     } else if ( partCount < 3 ) {
