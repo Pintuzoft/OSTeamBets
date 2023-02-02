@@ -27,34 +27,28 @@ public OnPluginStart ( ) {
 public Action OnClientSayCommand ( int client, const char[] command, const char[] sArgs ) {
     char cmd[16][32];
     int partCount = ExplodeString ( sArgs, " ", cmd, 16, 32 );
-     
-    if ( partCount < 3 ) {
-        PrintToChat ( client, "[OSTeamBets]: Invalid command. Please use 'bet <T|CT> <amount>'." );
+   
+    if ( ! playerIsReal ( client ) ) {
         return Plugin_Continue;
-    }
 
-    PrintToConsoleAll ( "cmd[0]: %s", cmd[0] );
-    PrintToConsoleAll ( "cmd[1]: %s", cmd[1] );
-    PrintToConsoleAll ( "cmd[2]: %s", cmd[2] );
-
-    if ( ! StrEqual ( cmd[0], "bet", false ) ||
+    } else if ( ! StrEqual ( cmd[0], "bet", false ) ||
          ! StrEqual ( cmd[0], "!bet", false ) ) {
         return Plugin_Continue;
 
-    } else if ( ! playerIsReal ( client ) ) {
+    } else if ( partCount < 3 ) {
+        PrintToChat ( client, "[OSTeamBets]: Invalid command. Please use 'bet <T|CT> <amount>'." );
         return Plugin_Continue;
     
     } else if ( IsPlayerAlive ( client ) ) {
         PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
         return Plugin_Continue;
     
+    } else if ( ! StrEqual ( cmd[1], "T", false ) && ! StrEqual ( cmd[1], "CT", false ) ) {
+        PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
+        return Plugin_Continue;
+
     } else if ( bets[client][0] != 0 ) {
         PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
-        return Plugin_Continue;
-    
-    } else if ( ! StrEqual ( cmd[1], "T", false ) &&
-                ! StrEqual ( cmd[1], "CT", false ) ) {
-        PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
         return Plugin_Continue;
     } 
     doBet ( client, cmd[1], cmd[2] );
