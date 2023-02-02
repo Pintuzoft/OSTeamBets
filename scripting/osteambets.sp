@@ -29,30 +29,29 @@ public Action OnClientSayCommand ( int client, const char[] command, const char[
     int partCount = ExplodeString ( sArgs, " ", cmd, 16, 32 );
    
     if ( ! playerIsReal ( client ) ) {
-        return Plugin_Continue;
+        return Plugin_Handled;
 
     } else if ( ! StrEqual ( cmd[0], "bet", false ) && ! StrEqual ( cmd[0], "!bet", false ) ) {
-        return Plugin_Continue;
+        return Plugin_Handled;
 
     } else if ( partCount < 3 ) {
         PrintToChat ( client, "[OSTeamBets]: Invalid command. Please use 'bet <T|CT> <amount>'." );
-        return Plugin_Continue;
+        return Plugin_Handled;
     
     } else if ( IsPlayerAlive ( client ) ) {
         PrintToChat ( client, "[OSTeamBets]: You can't bet while you're alive." );
-        return Plugin_Continue;
+        return Plugin_Handled;
     
     } else if ( ! StrEqual ( cmd[1], "T", false ) && ! StrEqual ( cmd[1], "CT", false ) ) {
         PrintToChat ( client, "[OSTeamBets]: Invalid team. Please use 'T' or 'CT'." );
-        return Plugin_Continue;
+        return Plugin_Handled;
 
     } else if ( bets[client][0] != 0 ) {
         PrintToChat ( client, "[OSTeamBets]: You can't bet more than once per round." );
-        return Plugin_Continue;
+        return Plugin_Handled;
     } 
     doBet ( client, cmd[1], cmd[2] );
-
-    return Plugin_Continue;
+    return Plugin_Handled;
 }
 
 /* EVENTS */
